@@ -1,0 +1,74 @@
+<?php
+	include_once 'bbdd/config.inc.php';
+	include_once 'bbdd/Conexion.inc.php';
+	include_once 'bbdd/ControlSesion.inc.php';
+	include_once 'bbdd/RepositorioProfesor.inc.php';
+	include_once 'bbdd/RepositorioDirectorio.inc.php';
+	include_once 'bbdd/RepositorioExamen.inc.php';
+	include_once 'bbdd/RepositorioEjercicio.inc.php';
+	include_once 'bbdd/RepositorioPuntuacion.inc.php';
+	include_once 'bbdd/RepositorioNota.inc.php';
+	include_once 'bbdd/RepositorioAlumno.inc.php';
+	include_once 'bbdd/Directorio.inc.php';
+	include_once 'bbdd/Examen.inc.php';
+	include_once 'bbdd/Ejercicio.inc.php';
+	include_once 'bbdd/Puntuacion.inc.php';
+	include_once 'bbdd/Nota.inc.php';
+	include_once 'bbdd/Alumno.inc.php';
+	include_once 'bbdd/ValidadorDirectorio.inc.php';
+	include_once 'bbdd/Redireccion.inc.php';
+
+    	if(!ControlSesion::sesion_iniciada()) {
+	    include_once 'bbdd/Redireccion.inc.php';
+	    Redireccion::redirigir(SERVIDOR);
+	}
+
+	include_once 'produccio/documento-declaracion.inc.php';
+	include_once 'produccio/navbar.inc.php';
+
+	include_once 'produccio/navegador.inc.php';
+
+	switch($partes_ruta[1]){
+		case 'directorio':
+			include_once 'produccio/panel_control_declaracion.inc.php';
+			include_once 'produccio/general.inc.php';			
+			break;
+		case 'registro':
+			include_once 'produccio/panel_control_declaracion.inc.php';
+			include_once 'vistas/registro.php';			
+			break;
+		case 'registro-correcto':
+			include_once 'produccio/panel_control_declaracion.inc.php';
+			include_once 'vistas/registro-correcto.php';			
+			break;
+		case 'examenes':	
+			include_once 'produccio/panel_control_declaracion.inc.php';
+			include_once 'produccio/examenes.inc.php';
+			break;
+		case 'informacio':
+			include_once 'produccio/panel_control_declaracion.inc.php';
+			include_once 'produccio/informacio.inc.php';
+			break;
+		case 'exercicis':
+			include_once 'produccio/panel_control_declaracion.inc.php';
+			include_once 'produccio/exercicis.inc.php';
+			break;
+		case 'exercici_nou':
+			include_once 'produccio/exercici_nou.inc.php';
+			break;
+		case 'correccio':
+			include_once 'produccio/correccion.inc.php';
+			break;
+		case 'alumnes':
+			include_once 'produccio/panel_control_declaracion.inc.php';
+			include_once 'produccio/alumnes.inc.php';
+			break;
+		case 'upload':
+			include_once 'produccio/panel_control_declaracion.inc.php';
+			include_once 'produccio/upload.inc.php';
+			break;
+	}
+	include_once 'produccio/panel_control_cierre.inc.php';
+	include_once 'produccio/documento-cierre.inc.php';
+?>
+

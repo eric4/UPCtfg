@@ -1,0 +1,79 @@
+<?php
+	
+include_once 'bbdd/RepositorioAlumno.inc.php';
+
+if(isset($_SESSION['id_directorio'])) { 
+	$id_directorio = $_SESSION['id_directorio'];
+} else {
+	$id_directorio = '';
+}
+
+	$panell2 = true;
+
+	if(isset($_POST['upload'])) {
+		Conexion::abrir_conexion();
+		if( (substr($_FILES['excel']['name'], -3) == "pdf") ) {
+
+			$planas = $_POST['planas'];
+			include_once 'produccion/upload.inc.php';
+
+		}
+		Conexion::cerrar_conexion();
+	}
+?>
+
+<?php if($panell2) { ?>
+<div class="panel panel-default">
+	<div class="panel-heading text-center">
+		<h4> Nou Examen </h4>
+	</div>
+	<div class="panel-body">
+		<form role="form" name="frmSubirArchivo" method="post" enctype="multipart/form-data" action="#" >
+			<h2> INTRODUEIX LES DADES </h2>
+			<br>
+			<h3> PAS 2: Pujar Pdf Examen </h3>
+			<br>
+			<br>
+			<h4>Seleccionar el PDF</h4>
+			<br>
+			<input type="file" name="excel" required/>
+			<br>
+			<h4>Seleccionar les planes de l'examen</h4>
+			<br>
+		    	<input type="number" name="planas" id="nom" class="form-control" style="width: 95%;" 
+			placeholder="Planas del Examen" value="1" min="1" required autofocus />
+		 	<br>
+<?php
+			if(isset($_POST['upload'])) {
+			    if(substr($_FILES['excel']['name'], -3) == "pdf") {
+				if($division) {
+				    echo "<br><div class='alert alert-success' role='alert'>";
+				    echo "pdf pujat correctament";
+				    echo "</div><br>";
+				} else {
+				    echo "<br><div class='alert alert-danger' role='alert'>";
+				    echo "El nombre de planes a dividir no coincideix amb el tamany del pdf";
+				    echo "</div><br>";
+				}
+
+			    } else {
+				echo "<br><div class='alert alert-danger' role='alert'>";
+				echo "Cal introduir un arxiu .pdf";
+				echo "</div><br>";
+			    }
+			}
+?>
+			<button type="submit" name="upload" class="btn btn-lg btn-primary btn-block">Introduir Dades</button>
+		</form>
+
+		<form role="form" name="next" method="post" enctype="multipart/form-data" action="<?php echo RUTA_INFORMACIO_3 ?>" >
+			<button type="submit" id="siguiente" class="btn btn-secondary"
+			style="display:inline-block; float: right; margin-top: 50px; font-size: 16px; border:1px solid black;"> 
+				Següent <span class="glyphicon glyphicon-arrow-right" />
+			</button>
+		</form>
+		<br>
+		<br>
+	</div>
+</div>
+<?php } ?>

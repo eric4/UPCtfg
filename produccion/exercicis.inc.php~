@@ -1,0 +1,82 @@
+<?php
+	include_once 'dadbar.inc.php';
+
+$id_directorio = $_SESSION['directori'];
+if($id_directorio != '') {
+
+	Conexion::abrir_conexion();
+	$directorio = RepositorioDirectorio::obtener_directorio(Conexion::obtener_conexion(), $id_directorio);
+
+	foreach($_SESSION['examenes'] as $e) { 
+	    if(isset($_POST[$e -> obtener_nombre()])) {
+		$_SESSION['id_examen'] = $e -> obtener_id();
+	    }
+	}
+
+	$id_examen = $_SESSION['id_examen'];
+	if(isset($_POST[$directorio -> obtener_nombre()])) {
+		/*$ejercicio = new Ejercicio('', $_POST['nom'], $_POST['x'], $_POST['y'], $_POST['w'], $_POST['h'], $id_examen);
+		$insertar = RepositorioEjercicio::insertar_ejercicio(Conexion::obtener_conexion(), $ejercicio);
+		$selecciona = RepositorioEjercicio::seleccionar_ejercicio(Conexion::obtener_conexion(), $_POST['nom'], 
+			       $_POST['x'], $_POST['y'], $_POST['w'], $_POST['h'], $id_examen);
+
+		$array = $_POST['num'];
+		$array_num = count($array);
+		for($i = 0; $i<$array_num; $i++){
+			$puntuacion = new Puntuacion('', $array[$i], $selecciona);
+			$insertar = RepositorioPuntuacion::insertar_puntuacion(Conexion::obtener_conexion(), $puntuacion);
+		}*/
+	}
+
+	$_SESSION['ejercicios'] = RepositorioEjercicio::obtener_todos(Conexion::obtener_conexion(), $id_examen);
+	Conexion::cerrar_conexion();	
+?>
+
+<div class="container col-md-12">
+	<h1>
+	<strong>
+
+	<?php echo $directorio -> obtener_nombre() ?>
+	<?php echo 'CURS ' . $directorio -> obtener_inicio() . '-' . $directorio -> obtener_fin() ?>
+	<?php echo $directorio -> obtener_cuatrimestre() ?>
+
+	</strong>
+	</h1>
+	<h2>EXERCICIS</h2>
+</div>
+
+<div class="container col-md-12">
+    <ul class="nav nav-sidebar wrapper">
+
+<?php
+foreach($_SESSION['ejercicios'] as $e) {
+?>
+	<div class="container">
+		<div class="row">
+			<form role="form" method="post" action="<?php echo RUTA_CORRECCIO ?>">
+				<button id="examenes" type="submit" name="<?php echo $e -> obtener_nombre(); ?>" 
+					class="btn btn-lg btn-primary btn-block"> <?php echo $e -> obtener_nombre(); ?>
+				</button>
+			</form>
+<?php
+}
+?>
+			<form role="form" method="post" action="<?php echo RUTA_ALUMNES ?>">
+				<button id="examenes" type="submit" name="<?php echo $directorio -> obtener_nombre() ?>" 
+					class="btn btn-lg btn-primary btn-block"> Puntuacions Alumnes
+				</button>
+			</form>
+
+			<form role="form" method="post" action="<?php echo RUTA_EXERCICI_NOU ?>">
+			    <button id="examenes" type="submit" name="nouExercici" class="btn btn-lg btn-primary btn-block"> Nou Exercici </button>
+			</form>
+		</div>
+	</div>
+    </ul>
+</div>
+<?php
+} else {
+	include_once 'vistas/404.php';
+}
+?>
+

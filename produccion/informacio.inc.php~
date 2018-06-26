@@ -1,0 +1,45 @@
+<?php
+	include_once 'app/RepositorioAlumno.inc.php';
+	include_once 'dadbar.inc.php';
+
+	$id_directorio = $_SESSION['directori'];
+
+	if(isset($_POST['upload'])) {
+		Conexion::abrir_conexion();
+		if((substr($_FILES['excel']['name'], -3) == "csv") or (substr($_FILES['excel']['name'], -3) == "ods") or 
+			(substr($_FILES['excel']['name'], -3) == "xls") or (substr($_FILES['excel']['name'], -4) == "xlsx")) {
+			include_once 'upload.inc.php';
+		}
+		Conexion::cerrar_conexion();
+	}
+?>
+
+<div class="panel panel-default">
+	<div class="panel-heading text-center">
+		<h4> Nou Examen </h4>
+	</div>
+	<div class="panel-body">
+		<form role="form" name="frmSubirArchivo" method="post" enctype="multipart/form-data" action="<?php echo RUTA_INFORMACIO ?>" >
+			<h2> INTRODUEIX LES TEVES DADES </h2>
+			<br>
+			<h3> Nom Examen </h3>
+			<br>
+			<input type="nom" name="nom" id="nom" class="form-control" placeholder="Nom Examen" required autofocus>
+			<br>
+			<h3> Pujar Alumnes </h3>
+			<br>
+			<input type="file" name="excel" />
+			<br>
+<?php
+			if(isset($_POST['upload'])) {
+				echo "<br><div class='alert alert-danger' role='alert'>";
+				echo "Cal introduir un arxiu excel";
+				echo "</div><br>";
+			}
+?>
+			<button type="submit" name="upload" class="btn btn-lg btn-primary btn-block">Introducir Datos</button>
+		</form>
+		<br>
+		<br>
+	</div>
+</div>

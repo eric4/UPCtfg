@@ -1,0 +1,78 @@
+<?php
+	include_once 'app/config.inc.php';
+	include_once 'app/Conexion.inc.php';
+	include_once 'app/RepositorioProfesor.inc.php';
+	include_once 'app/Profesor.inc.php';
+	include_once 'app/ValidadorRegistro.inc.php';
+	include_once 'app/Redireccion.inc.php';
+
+	if(isset($_POST['enviar'])) {
+		Conexion::abrir_conexion();
+
+		$validador = new ValidadorRegistro($_POST['nombre'], $_POST['email'], $_POST['clave1'], $_POST['clave2'],
+							Conexion::obtener_conexion());
+		if($validador -> registro_valido()){
+			$profesor = new Profesor('', $validador -> obtener_nombre(),  $validador -> obtener_email(),
+						 password_hash($validador -> obtener_clave(), PASSWORD_DEFAULT), '', '');
+
+			$profesor_insertado = RepositorioProfesor::insertar_profesor(Conexion::obtener_conexion(), $profesor);
+
+			if($profesor_insertado) {
+				Redireccion::redirigir(RUTA_REGISTRO_CORRECTO . '?nombre=' . $profesor -> obtener_nombre() );
+			}
+		}
+		Conexion::cerrar_conexion();
+	}
+
+	$titulo = "Registo";
+
+	include_once 'plantillas/documento-declaracion.inc.php';
+	include_once 'plantillas/navbar.inc.php';
+?>
+
+<div class="container">
+	<div class="jumbotron">
+		<h1 class="text-center">Formulario de Registro</h1>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title"> Instrucciones </h3>
+				</div>
+				<div class="panel-body">
+					<br>
+					<p> Introducir nombre y contraseña para entrar </p>
+					<br>
+					<a href=#> ¿Ya tienes cuenta? </a>
+					<br>
+					<a href=#> ¿Olvidaste tu contraseña? </a>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title"> Introduce tus datos </h3>
+				</div>
+				<div class="panel-body">
+					<form role="form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+						<?php
+							if(isset($_POST['enviar'])) {
+								include_once 'plantillas/registro-validado.inc.php';
+							} else {
+								include_once 'plantillas/registro-vacio.inc.php';
+							}
+						?>
+					</form>
+				</div>
+			</div>
+		</div>
+
+
+<?php
+	include_once 'plantillas/documento-cierre.inc.php';
+?>

@@ -1,0 +1,43 @@
+<?php
+
+include_once 'bbdd/RepositorioExamen.inc.php';
+
+class Examenes {
+
+	public static function seleccion_total($conexion, $id_directorio){
+	    return RepositorioExamen::obtener_todos($conexion, $id_directorio);
+	}
+
+	public static function split_pdf($filename, $planas, $dir = false){
+	    require_once("pdf/fpdf/fpdf.php");
+	    require_once("pdf/fpdi/src/autoload.php");
+	    require_once("pdf/fpdi/src/Fpdi.php");
+
+	    $pdf = new fpdf();
+	    $pdfi = new setasign\Fpdi\Fpdi();
+
+	    $dir = $dir ? $dir : './';
+	    $pagecount = $pdfi -> setSourceFile($filename);
+
+	    for($i = 1; $i <= $pagecount; $i = ($i + $planas) ) {
+		$new_pdf = new setasign\Fpdi\Fpdi();
+
+		for($p = $i; $p < ($i + $planas); $p = ($p + 1) ) {
+		    $new_pdf -> AddPage();
+		    $new_pdf -> setSourceFile($filename);
+		    $new_pdf -> useTemplate($new_pdf -> importPage($p));
+		}
+		
+		try {
+		    $new_filename = $dir.str_replace('.pdf', '', $filename).'_'.$i.".pdf";
+		    $new_pdf -> Output($new_filename, "F");
+
+		} catch (Exception $e) {
+		    echo 'caught exception: ', $e -> getMessage(), "\n";
+		}
+	    }	    
+	}
+
+}
+
+?>

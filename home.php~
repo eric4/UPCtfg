@@ -1,0 +1,52 @@
+<?php
+	include_once 'app/Conexion.inc.php';
+	include_once 'app/RepositorioProfesor.inc.php';
+
+	$titulo = "Presentacion";
+
+	include_once 'plantillas/documento-declaracion.inc.php';
+	include_once 'plantillas/navbar.inc.php';
+?>
+
+		<div class="container">
+			<div class="jumbotron">
+				<h1>TFG de software</h1>
+				<p>Dedicado a la programacion</p>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<span class="glyphicon glyphicon-search" aria-hidden="true"> Busqueda
+	
+								</div>
+								<div class="panel-body">
+									<div class="form-group">
+										<input type="search" class="form-control" placeholder="Que buscas?">
+									</div>
+									<button class="form-control">Buscar</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<span class="glyphicon glyphicon-time" aria-hidden="true"> Ultimas entradas
+						</div>
+						<div class="panel-body">
+							<p>No hay entradas</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+<?php
+	include_once 'plantillas/documento-cierre.inc.php';
+?>
+

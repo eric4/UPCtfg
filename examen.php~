@@ -1,0 +1,44 @@
+<?php
+	include_once 'app/config.inc.php';
+	include_once 'app/Conexion.inc.php';
+	include_once 'app/RepositorioProfesor.inc.php';
+	include_once 'app/ValidadorLogin.inc.php';
+	include_once 'app/ControlSesion.inc.php';
+	include_once 'app/Redireccion.inc.php';
+
+	$titulo = 'entradas';
+	$boto1 = '';
+
+	include_once 'plantillas/documento-declaracion.inc.php';
+	include_once 'plantillas/navbar.inc.php';
+	include_once 'plantillas/panel_control_declaracion.inc.php';
+
+	/*$componentes_url = parse_url($_SERVER['REQUEST_URI']);
+	$partes_ruta = explode('/', $componentes_url['path']);
+	$partes_ruta = array_filter($partes_ruta);
+	$partes_ruta = array_slice($partes_ruta, 0);
+
+	if(count($partes_ruta) > 1) {
+		if($partes_ruta[1] == 'examen.php') {
+			include_once 'plantillas/examen-generico.inc.php';
+		} else {
+			include_once 'plantillas/examen-C1.inc.php';
+		}
+		echo $examen_actual;
+	}*/
+
+	/*switch($examen_actual) {
+		case '':
+			include_once 'plantillas/examen-generico.inc.php';
+			break;
+		case 'entradas':
+			include_once 'plantillas/examen-C1.inc.php';
+			break;
+			
+	}*/
+
+	include_once 'plantillas/panel_control_cierre.inc.php';
+?>
+
+
+		

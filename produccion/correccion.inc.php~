@@ -1,0 +1,251 @@
+<?php
+
+$id_directorio = $_SESSION['directori'];
+if($id_directorio != '') {
+
+if(isset($_POST['adelante'])) {
+	$total_alumnos = $_POST['total_alumnos'];
+	$total_puntuacion = $_POST['total_puntuacion'];
+	$i = $_POST['i'];
+	if(($i + 1) == count($_SESSION['arrayAlumnos'])) { $i = 0; }
+	else { $i = $i + 1; }
+	$x = $_POST['x'];
+	$y = $_POST['y'];
+	$w = $_POST['w'];
+	$h = $_POST['h'];
+
+} else if(isset($_POST['atras'])) {
+	$total_alumnos = $_POST['total_alumnos'];
+	$total_puntuacion = $_POST['total_puntuacion'];
+	$i = $_POST['i'];
+	if($i == 0) { $i = (count($_SESSION['arrayAlumnos']) - 1); }
+	else { $i = $i - 1; }
+	$x = $_POST['x'];
+	$y = $_POST['y'];
+	$w = $_POST['w'];
+	$h = $_POST['h'];
+
+} else if(isset($_POST['calculo'])) {
+	$i = $_POST['i'];
+	$check = $_POST['check'];
+	$extra = $_POST['e'];
+	$x = $_POST['x'];
+	$y = $_POST['y'];
+	$w = $_POST['w'];
+	$h = $_POST['h'];
+	$arrayAlumno = $_SESSION['arrayAlumnos'];
+	$total_puntuacion = $_POST['total_puntuacion'];
+
+	Conexion::abrir_conexion();
+	$tn = RepositorioNota::tiene_nota(Conexion::obtener_conexion(), $_SESSION['id_ejercicio'], $arrayAlumno[$i] -> obtener_id());
+	if($tn == 0){
+	    $tn = RepositorioNota::insertar_nota(Conexion::obtener_conexion(),$check,$extra,$_SESSION['id_ejercicio'],$arrayAlumno[$i]->obtener_id());
+	} else {
+	    $nota = RepositorioNota::obtener_nota(Conexion::obtener_conexion(),$_SESSION['id_ejercicio'],$arrayAlumno[$i]->obtener_id());
+	    if( ($check != ($nota[0] -> obtener_valor()) ) || ($extra != ($nota[0] -> obtener_extra()) ) ) {
+	       $tn=RepositorioNota::modificar_nota(Conexion::obtener_conexion(),$check,$extra,$_SESSION['id_ejercicio'],$arrayAlumno[$i]->obtener_id());
+	    }
+	}
+	Conexion::cerrar_conexion();
+
+} else if(isset($_POST['comentario_submit'])) {
+	$i = $_POST['i'];
+	$check = $_POST['check'];
+	$extra = $_POST['e'];
+	$x = $_POST['x'];
+	$y = $_POST['y'];
+	$w = $_POST['w'];
+	$h = $_POST['h'];
+	$arrayAlumno = $_SESSION['arrayAlumnos'];
+	$total_puntuacion = $_POST['total_puntuacion'];
+	$texto = $_POST['comentario_texto'];
+
+	Conexion::abrir_conexion();
+	$tn = RepositorioNota::tiene_nota(Conexion::obtener_conexion(), $_SESSION['id_ejercicio'], $arrayAlumno[$i] -> obtener_id());
+	if($tn > 0){
+	    $nota = RepositorioNota::obtener_nota(Conexion::obtener_conexion(),$_SESSION['id_ejercicio'],$arrayAlumno[$i]->obtener_id());
+	    $tn = RepositorioNota::insertar_comentario(Conexion::obtener_conexion(), $texto, $_SESSION['id_ejercicio'], $arrayAlumno[$i]->obtener_id());
+	}
+	Conexion::cerrar_conexion();
+
+} else {
+	Conexion::abrir_conexion();
+
+	foreach($_SESSION['ejercicios'] as $e) { 
+	    if(isset($_POST[$e -> obtener_nombre()])) {
+		$_SESSION['id_ejercicio'] = $e -> obtener_id();
+		$x = $e -> obtener_x();
+		$y = $e -> obtener_y();
+		$w = $e -> obtener_w();
+		$h = $e -> obtener_h();
+	    }
+	}
+	$i = 0;
+	$_SESSION['arrayPuntuacion'] = RepositorioPuntuacion::obtener_todos(Conexion::obtener_conexion(), $_SESSION['id_ejercicio']);
+	$_SESSION['arrayAlumnos'] = RepositorioAlumno::obtener_todos(Conexion::obtener_conexion(), $_SESSION['id_examen']);
+	$total_alumnos = count($_SESSION['arrayAlumnos']);
+	$total_puntuacion = count($_SESSION['arrayPuntuacion']);
+
+	Conexion::cerrar_conexion();
+}
+	$arrayPuntuacion = $_SESSION['arrayPuntuacion'];
+	$arrayAlumno = $_SESSION['arrayAlumnos'];
+	$image = $arrayAlumno[$i] -> obtener_examen_cara_A();
+	$texto = '/';
+
+	Conexion::abrir_conexion();
+	$tn = RepositorioNota::tiene_nota(Conexion::obtener_conexion(), $_SESSION['id_ejercicio'], $arrayAlumno[$i] -> obtener_id());
+	if($tn > 0){
+	    $nota_ejercicio = RepositorioNota::obtener_nota(Conexion::obtener_conexion(),$_SESSION['id_ejercicio'],$arrayAlumno[$i]->obtener_id());
+	    $texto = $nota_ejercicio[0] -> obtener_comentario();
+	}
+	Conexion::cerrar_conexion();
+?>
+
+<div class="container">
+    <div class="row">
+	<div class="col-sm-12 col-md-12" style="text-align: center;">
+	    <div id="rates" style="inline-block">
+		<?php for($p = 0; $p < $total_puntuacion; $p++){ 
+		    if($tn > 0){
+			if( ($nota_ejercicio[0] -> obtener_valor()) == ($arrayPuntuacion[$p] -> obtener_valor()) ){ ?>
+			    <label class="puntuacion"> 
+				<input type="radio" value="<?php echo $arrayPuntuacion[$p] -> obtener_valor(); ?>" name="radio" checked />
+				<?php echo $arrayPuntuacion[$p] -> obtener_valor(); ?>
+		    	    </label>
+			<?php } else { ?>
+			    <label class="puntuacion"> 
+				<input type="radio" value="<?php echo $arrayPuntuacion[$p] -> obtener_valor(); ?>" name="radio">
+				<?php echo $arrayPuntuacion[$p] -> obtener_valor(); ?>
+		    	    </label>
+			<?php } 
+		    } else { ?>
+			<label class="puntuacion"> 
+			    <input type="radio" value="<?php echo $arrayPuntuacion[$p] -> obtener_valor(); ?>" name="radio">
+			    <?php echo $arrayPuntuacion[$p] -> obtener_valor(); ?>
+		    	</label>
+		<?php } 
+		} ?>
+		<label class="puntuacion">
+		    EXTRA: 
+			<?php if($tn > 0) { 
+			    $extra = $nota_ejercicio[0] -> obtener_extra(); ?>	   
+			    <input type="number" step="0.01" id="extra" value="<?php echo $extra; ?>" style="width:100px; text-align:center;" />
+			<?php } else { ?>
+			    <input type="number" step="0.01" id="extra" value="0" style="width:100px; text-align:center;" />
+			<?php } ?>
+		</label>
+	    </div>
+	    <div style="display: inline-block;">
+		<form role="form" method="post" action="#" onsubmit="return getChecked();">
+		    <label class="puntuacion">		   
+		    	<input type="submit" name="calculo" value=">>" class="btn btn-primary btn-lg" />
+		    </label>
+		    <label class="resultado">	
+			<?php if($tn > 0) { 
+			    $total = ( $nota_ejercicio[0] -> obtener_extra() + $nota_ejercicio[0] -> obtener_valor() );?>	   
+			    <input type="text" disabled value="<?php echo $total ?>" style="width:100px; text-align:center;" /> Resultat exercici
+			<?php } else { ?>
+			    <input type="text" disabled value="" style="width:100px; text-align:center;" /> Resultat exercici
+			<?php } ?>
+		    </label>
+		    <input type="hidden" value="<?php echo $i ?>" name="i" />
+		    <input type="hidden" value="<?php echo $total_puntuacion ?>" name="total_puntuacion" />
+                    <input type="hidden" value="<?php echo $x ?>" name="x" />
+                    <input type="hidden" value="<?php echo $y ?>" name="y" />
+                    <input type="hidden" value="<?php echo $w ?>" name="w" />
+                    <input type="hidden" value="<?php echo $h ?>" name="h" />
+                    <input type="hidden" id="check" name="check" />
+                    <input type="hidden" id="e" name="e" />
+		</form>
+	    </div>
+	    <p style="font-size: 20px; font-style: italic;"> <strong><?php echo $arrayAlumno[$i] -> obtener_nombre().' '.
+		$arrayAlumno[$i] -> obtener_primer_apellido().' '.$arrayAlumno[$i] -> obtener_segundo_apellido() ?> </strong>
+	    </p>
+	    <div class="col-md-12 wrapper" style="height: inherit;">
+		<div style="width: <?php echo $w ?>px; height: <?php echo $h ?>px; display: inline-block; position: relative; overflow: hidden;">
+		    <embed src="<?php echo $image ?>" style="width: 1174px; height: 1504px; top: -<?php echo $y ?>px; 
+		    position: relative; overflow: hidden; display: inline-block; left: -<?php echo $x ?>px;"/>
+	        </div>
+	    </div>
+	    <form role="form" method="post" action="#">
+		<input type="hidden" value="<?php echo $i ?>" name="i" />
+		<input type="hidden" value="<?php echo $total_alumnos ?>" name="total_alumnos" />
+		<input type="hidden" value="<?php echo $total_puntuacion ?>" name="total_puntuacion" />
+                <input type="hidden" value="<?php echo $x ?>" name="x" />
+                <input type="hidden" value="<?php echo $y ?>" name="y" />
+                <input type="hidden" value="<?php echo $w ?>" name="w" />
+                <input type="hidden" value="<?php echo $h ?>" name="h" />
+		
+		<input type="submit" name="atras" value="<" class="btn btn-primary btn-lg" />
+		<input type="submit" name="adelante" value=">" class="btn btn-primary btn-lg" />
+	    </form>
+
+	</div>
+    </div>
+    <div class="row">
+	<div class="col-sm-12 col-md-12" style="text-align: center;">
+	    <form role="form" method="post" action="#">
+		<div>
+		    <p style="font-size: 20px; line:height:20px; margin-top: 20px;"> <strong> COMENTARIS </strong> </p>
+		    <textarea name="comentario_texto" rows="10" style="width:60%; font-size: 15px; margin-top: 10px;">
+<?php if($texto == ''){
+    echo $extra;
+} 
+else {
+    echo $texto;
+} ?>
+		    </textarea>
+		</div>
+		<div>
+		    <input type="submit" name="comentario_submit" value="Guardar el comentari" class="btn btn-primary btn-lg" 
+			style="margin-top: 10px; margin-bottom: 25px;"/>
+		    <input type="hidden" value="<?php echo $i ?>" name="i" />
+		    <input type="hidden" value="<?php echo $total_puntuacion ?>" name="total_puntuacion" />
+                    <input type="hidden" value="<?php echo $x ?>" name="x" />
+                    <input type="hidden" value="<?php echo $y ?>" name="y" />
+                    <input type="hidden" value="<?php echo $w ?>" name="w" />
+                    <input type="hidden" value="<?php echo $h ?>" name="h" />
+                    <input type="hidden" id="check" name="check" />
+                    <input type="hidden" id="e" name="e" />
+		</div>
+		<?php if( isset($_POST['comentario_submit']) ) {
+		    if($tn > 0){
+			echo "<br><div class='alert alert-success' role='alert'>";
+			echo "El comentari s'ha guardat correctament";
+			echo "</div><br>";
+		    } else{
+			echo "<br><div class='alert alert-danger' role='alert'>";
+			echo "L'usuari encara no té nota";
+			echo "</div><br>";
+		    }
+		} ?>
+	    </form>
+	</div>
+    </div>
+</div>
+
+<script>
+
+    function getChecked(){
+	var c = '';
+	var element = document.getElementById("rates").getElementsByTagName("input");
+	for(var i=element.length-2; i>=0; i--) {
+	    if(element[i].checked){
+		c = element[i].value;
+	    }
+	}
+	var extra = document.getElementById("extra").value;
+	$('#check').val( c );
+	$('#e').val( extra );
+    };
+
+</script>
+
+<?php
+
+} else {
+	include_once 'vistas/404.php';
+}
+
+?>

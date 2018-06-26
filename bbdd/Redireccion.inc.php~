@@ -1,0 +1,13 @@
+<?php
+
+class Redireccion {
+	public static function redirigir($url) {
+		header('Location: '.$url, true, 301);
+		header('Content-type: image/gif'); break;
+		header('Content-type: image/jpeg'); break;
+		header('Content-type: image/png');
+		exit();
+	}
+}
+
+?>

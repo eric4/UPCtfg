@@ -1,0 +1,101 @@
+<?php
+
+class RepositorioExamen {
+
+	public static function insertar_examen($conexion, $examen) {
+		$examen_insertado = false;
+
+		if(isset($conexion)) {
+			try {
+				$sql = "INSERT INTO Examenes(nombre, fecha, directorio_id)
+					 VALUES(:nombre, NOW(), :directorio_id)";
+
+				$sentencia = $conexion -> prepare($sql);
+				
+				$sentencia -> bindParam(':nombre', $examen -> obtener_nombre(), PDO::PARAM_STR);
+				$sentencia -> bindParam(':directorio_id', $examen -> obtener_directorio_id(), PDO::PARAM_STR);
+
+				$examen_insertado = $sentencia -> execute();
+
+			} catch(PDOException $ex) {
+				print "ERROR: " . $ex -> getMessage() . "<br>";
+			}
+		}
+		return $examen_insertado;
+	}
+
+	public static function obtener_id_examen($conexion) {
+
+		if(isset($conexion)) {
+			try {
+				$resultado = $conexion->lastInsertId();
+
+			} catch(PDOException $ex) {
+				print "ERROR: " . $ex -> getMessage() . "<br>";
+			}
+		}
+		return $resultado;
+	}
+
+	public static function nombre_existe($conexion, $directorio, $nombre) {
+		$nombre_existe = true;
+
+		if(isset($conexion)) {
+			try {
+				$sql = "SELECT * FROM Examenes WHERE directorio_id = :directorio AND nombre = :nombre";
+
+				$sentencia = $conexion -> prepare($sql);
+
+				$sentencia -> bindParam(':directorio', $directorio, PDO::PARAM_STR);				
+				$sentencia -> bindParam(':nombre', $nombre, PDO::PARAM_STR);
+
+				$sentencia -> execute();
+				$resultado = $sentencia -> fetchAll();
+
+				if(count($resultado) > 0){
+					$nombre_existe = true;
+				} else {
+					$nombre_existe = false;
+				}
+			} catch(PDOException $ex) {
+				print "ERROR: " . $ex -> getMessage() . "<br>";
+			}
+		}
+		return $nombre_existe;
+	}
+
+	public static function obtener_todos($conexion, $directorio_id) {
+		$examenes = array();
+
+		if(isset($conexion)) {
+			try {
+				include_once 'Examen.inc.php';
+
+				$sql = "SELECT E1.id_examen, E1.nombre, E1.fecha, E1.directorio_id FROM Examenes E1 INNER JOIN Directorios P1 
+								WHERE E1.directorio_id = P1.id_directorio AND E1.directorio_id = :directorio_id";
+
+				$sentencia = $conexion -> prepare($sql);
+
+				$sentencia -> bindParam(':directorio_id', $directorio_id, PDO::PARAM_STR);
+
+				$sentencia -> execute();
+				$resultado = $sentencia -> fetchAll();
+
+				if(count($resultado)) {
+					foreach($resultado as $fila) {
+						$examenes[] = new Examen($fila['id_examen'], $fila['nombre'], $fila['fecha'],$fila['directorio_id']);
+					}
+				} else {
+					// print "No hay profesores ";
+				}
+
+			} catch(PDOException $ex) {
+				print "ERROR: " . $ex -> getMessage() . "<br>";
+			}
+		}
+		return $examenes;
+	}
+
+}
+
+?>

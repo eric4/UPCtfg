@@ -1,0 +1,17 @@
+<?php
+
+include_once 'Classes/PHPExcel/IOFactory.php';
+include_once 'bbdd/RepositorioAlumno.inc.php';
+
+$path = "media/";
+opendir($path);
+$path = $path . $_SESSION['id_examen'] . "/";
+opendir($path);
+$destino = $path.$_FILES['excel']['name'];
+copy($_FILES['excel']['tmp_name'], $destino);
+
+$division = Examenes::split_pdf($destino, $planas);
+
+
+
+?>

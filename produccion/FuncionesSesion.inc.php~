@@ -1,0 +1,24 @@
+<?php
+
+include_once 'bbdd/ControlSesion.inc.php';
+
+class Sesion {
+
+	public static function sesion_iniciada(){
+	    return ControlSesion::sesion_iniciada();	
+	}
+
+	public static function inicio(){
+	    ControlSesion::iniciar_sesion
+		(
+		    $validador -> obtener_profesor() -> obtener_id(), 
+		    $validador -> obtener_profesor() -> obtener_nombre(),
+		    $validador -> obtener_profesor() -> obtener_email(),
+		    $validador -> obtener_profesor() -> obtener_password(),
+		    $validador -> obtener_profesor() -> obtener_administrador()
+		);
+	}
+
+}
+
+?>

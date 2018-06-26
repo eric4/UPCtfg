@@ -1,0 +1,29 @@
+<?php
+
+	include_once 'produccion/FuncionesSesion.inc.php';
+
+	$titulo = '¡Logout correcto!';
+	if(Sesion::sesion_iniciada()) {
+		Sesion::cierre();
+	}
+
+	include_once 'produccion/header.inc.php';
+	include_once 'produccion/navbar.inc.php';
+?>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span> Logout correcto.
+				</div>
+				<div class="panel-body text-center">
+					<p>¡Hasta la próxima <b><?php echo ' ' . $_SESSION['nombre_profesor'] ?></b>!</p>
+					<br>
+					<p><a href="<?php echo SERVIDOR ?>" > Inicio </a> para acceder a la página principal. </p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

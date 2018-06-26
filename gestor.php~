@@ -1,0 +1,19 @@
+<?php
+	include_once 'app/config.inc.php';
+	include_once 'app/Conexion.inc.php';
+	include_once 'app/RepositorioProfesor.inc.php';
+	include_once 'app/ValidadorLogin.inc.php';
+	include_once 'app/ControlSesion.inc.php';
+	include_once 'app/Redireccion.inc.php';
+
+	$titulo = 'Gestor';
+
+	include_once 'plantillas/documento-declaracion.inc.php';
+	include_once 'plantillas/navbar.inc.php';
+	include_once 'plantillas/panel_control_declaracion.inc.php';
+
+	include_once 'plantillas/panel_control_cierre.inc.php';
+?>
+
+
+		

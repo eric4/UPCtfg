@@ -1,0 +1,42 @@
+<?php
+include_once 'app/RepositorioAlumno.inc.php';
+
+foreach($_SESSION['examenes'] as $e) {
+	
+	if(isset($_POST[$e -> obtener_nombre()])) {
+		Conexion::abrir_conexion();
+		$alumnos = RepositorioAlumno::obtener_todos(Conexion::obtener_conexion(), $e -> obtener_id());
+?>
+		<div class="table-responsive">
+			<table class="table">
+				<tr>
+					<th>NOMBRE</th>
+					<th>PRIMER APELLIDO</th>
+					<th>SEGUNDO APELLIDO</th>
+					<th>EXAMEN CARA A</th>
+					<th>EXAMEN CARA B</th>
+					<th>NOTA FINAL</th>
+				</tr>
+<?php
+				foreach($alumnos as $a) {
+?>
+				<tr>
+					<td> <?php echo $a -> obtener_nombre(); ?> </td>
+					<td> <?php echo $a -> obtener_primer_apellido(); ?> </td>
+					<td> <?php echo $a -> obtener_segundo_apellido(); ?> </td>
+					<td> <?php echo $a -> obtener_examen_cara_A(); ?> </td>
+					<td> <?php echo $a -> obtener_examen_cara_B(); ?> </td>
+					<td> <?php echo $a -> obtener_nota_final(); ?> </td>
+				</tr>
+<?php
+				}
+?>
+			</table>
+		</div>
+<?php
+		Conexion::cerrar_conexion();
+	}
+}
+
+?>
+
